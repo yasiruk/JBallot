@@ -1,19 +1,16 @@
 package me.yasiru.ballot;
 
-import org.opencv.core.Mat;
-import org.opencv.core.MatOfPoint;
-import org.opencv.core.Rect;
-import org.opencv.core.RotatedRect;
+import org.opencv.core.*;
 import org.opencv.imgcodecs.Imgcodecs;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by wik2kassa on 11/29/2016.
  */
-public class BallotPaper extends Mat {
+public class BallotPaper {
+    private Mat image;
     private Rect partyVoteArea;
     private Rect prefVoteArea;
     private List<MatOfPoint> externalContours;
@@ -23,11 +20,15 @@ public class BallotPaper extends Mat {
     private boolean isValidVote;
     private String filename;
     private int[] prefVoteInkCount;
+
+
+
     public BallotPaper() {
         super();
         partyVoteArea = new Rect();
         prefVoteArea = new Rect();
 
+        image = new Mat();
         externalContoursList = new Mat();
         externalContours = new ArrayList<MatOfPoint>();
 
@@ -36,9 +37,15 @@ public class BallotPaper extends Mat {
     }
 
     public static BallotPaper loadFromFile(String file) {
-        BallotPaper ballotPaper = (BallotPaper) Imgcodecs.imread(file);
+        Mat m = Imgcodecs.imread(file);
+        BallotPaper ballotPaper = new BallotPaper();
+        ballotPaper.image = m;
         ballotPaper.filename = file;
         return ballotPaper;
+    }
+
+    public static void writeToFile(String file, BallotPaper ballotPaper) {
+        Imgcodecs.imwrite(file, ballotPaper.image);
     }
 
     public Rect getPartyVoteArea() {
@@ -111,5 +118,13 @@ public class BallotPaper extends Mat {
 
     public void setExternalContoursList(Mat externalContoursList) {
         this.externalContoursList = externalContoursList;
+    }
+
+    public Mat getImage() {
+        return image;
+    }
+
+    public void setImage(Mat image) {
+        this.image = image;
     }
 }

@@ -30,30 +30,7 @@ public class App {
             writer.println("image_file, valid_vote, party_vote");
             for (String imagename :
                     balotPapers) {
-                Mat newImage = Imgcodecs.imread("balotpapers/" + imagename);
-                Mat bwImage = new Mat();
-                Imgproc.cvtColor(newImage, bwImage, Imgproc.COLOR_RGB2GRAY);
-                if (newImage.dataAddr() == 0) {
-                    System.out.println("Couldn't open file " + imagename);
-                } else {
-                    System.out.print("Processing " + imagename + " [ ");
-                    Mat threshholdedImage = BallotProcessor.threshhold(bwImage, 200);
-                    Imgcodecs.imwrite("processed_images/thresh_" + imagename, threshholdedImage);
-                    System.out.print("THRESHHOLD : DONE,\t");
-                    BallotProcessor.SegmentationResult segmentationResult = BallotProcessor.segment(threshholdedImage);
-                    System.out.print("SEGMENTATION : DONE,\t");
-                    BallotProcessor.SegmentedVoteSections segmentedVoteSections = BallotProcessor.getVoteSections(threshholdedImage, segmentationResult);
-                    System.out.print("ROTATION : " + (90 + segmentationResult.getPreferenceVoteBB().angle) + " ]\t");
-                    Imgcodecs.imwrite("processed_images/partysection_" + imagename, segmentedVoteSections.getPartyVoteArea());
-                    Imgcodecs.imwrite("processed_images/prefsection_" + imagename, segmentedVoteSections.getPreferenceVoteArea());
-                    VoteCounter vc = new VoteCounter();
-                    try {
-                        writer.println(imagename + ", " + "yes ," + (vc.getPartyVote(segmentedVoteSections.getPartyVoteArea()) + 1));
-                    } catch (VoteCounter.InvalidVote invalidVote) {
-                        writer.println(imagename + ", " + "no , -");
-                    }
-                    System.out.println();
-                }
+                BallotPaper ballotPaper = BallotPaper.loadFromFile("balotpapers/" + imagename);
             }
         } catch (FileNotFoundException e) {
             e.printStackTrace();
