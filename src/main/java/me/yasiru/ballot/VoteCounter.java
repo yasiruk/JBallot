@@ -44,8 +44,6 @@ public class VoteCounter {
                                 throw new InvalidVote();
                             votePartyIndex = (int) Math.ceil((11 * bRect.y) / partyVote.height());
                             votefound = true;
-//                            System.out.println("vote goes to " + (int)Math.ceil( (11 * bRect.y) / partyVote.height()) + " " + bRect.y);
-//                            Imgcodecs.imwrite("vote_pos" + i + ".jpg", new Mat(partyVote, bRect));
                         }
                 }
             }
